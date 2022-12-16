@@ -1,0 +1,68 @@
+﻿@model IEnumerable<GlossarioOneDnD_MVC.Models.Regra>
+
+@{
+    ViewData["Title"] = "DataTable";
+}
+@section Scripts{
+    <script>
+        function format(name, value, patch) {
+            // `d` is the original data object for the row
+            return '<div>' + value + '</div>' + '<hr>' +'<div><p>Atualizações:<p> ' + patch + '</div>';
+        }
+
+        $(document).ready(function () {
+            var table = $('#example').DataTable({});
+
+            // Add event listener for opening and closing details
+            $('#example tbody').on('click', 'td.dt-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(tr.data('child-name'), tr.data('child-value'), tr.data('child-patch'))).show();
+                    tr.addClass('shown');
+                }
+            });
+        });
+    </script>
+}
+
+<h3>Glossário de Regras</h3>
+<div>
+    Nessa página, você vai encontrar o glossário de regras atualizado. Ele foi feito em formato de lista para ser fácil de encontrar. Só clicar no sinal de + na esquerda que a regra irá
+    se expandir e você pode ler a descrição atual dela e "notas de atualização", que mostram o que mudou da última versão para essa. Se não tiver nota, é porque não teve atualização.
+</div>
+
+<table class="display" id="example">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                Regra:
+            </th>
+            <th>
+                Documento de Lançamento:
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr data-child-name="teste" data-child-value="@Html.DisplayFor(modelItem => item.Descricao)" ), data-child-patch="@Html.DisplayFor(modelItem => item.VersoesAnteriores)">
+                    <td class="dt-control">
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Titulo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem =>item.Glossario.Versao)    
+                    </td>
+            
+                </tr>
+        }
+    </tbody>
+</table>
